@@ -1245,6 +1245,8 @@ function shareVerse() {
 }
 
 function exportVerseAsPDF() {
+  showToast('Creating your scroll...');
+  
   const text = document.getElementById('verse-text').textContent;
   const ref = document.getElementById('verse-ref').textContent;
   const day = document.getElementById('verse-day').textContent;
@@ -1252,29 +1254,25 @@ function exportVerseAsPDF() {
   // Create SVG with scroll design
   const svgContent = createScrollSVG(text, ref, day);
   
-  // Convert SVG to canvas to image
-  const canvas = document.createElement('canvas');
-  canvas.width = 800;
-  canvas.height = 1000;
-  const ctx = canvas.getContext('2d');
-  
-  // Create image from SVG
-  const img = new Image();
-  img.onload = () => {
-    ctx.fillStyle = '#07091A';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
+  // Create blob and download directly
+  try {
+    const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
     
-    // Download as image or PDF
+    // Create link and download SVG
     const link = document.createElement('a');
-    link.href = canvas.toDataURL('image/png');
-    link.download = `verse-${day.replace(/\s/g, '-')}.png`;
+    link.href = url;
+    link.download = `zola-verse-${day.replace(/\s/g, '-')}.svg`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     
     showToast('📜 Verse scroll downloaded!');
-  };
-  
-  img.src = 'data:image/svg+xml;base64,' + btoa(svgContent);
+  } catch (error) {
+    console.error('Export error:', error);
+    showToast('Error: Could not create scroll');
+  }
 }
 
 function createScrollSVG(verseText, reference, day) {
