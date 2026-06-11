@@ -707,7 +707,7 @@ body{background:#07091A;}
       <div class="verse-color-swatches" id="color-swatches"></div>
       
       <!-- PDF EXPORT BUTTON -->
-      <button class="pdf-export-btn" onclick="exportVerseAsPDF()">📜 Share as Scroll</button>
+      <button class="pdf-export-btn" onclick="alert('test'); downloadScroll();">📜 Share as Scroll</button>
       
       <div class="sp-verse-btns">
         <button class="sp-vbtn" onclick="favoriteVerse()">❤ Mark</button>
@@ -1244,82 +1244,96 @@ function shareVerse() {
   }
 }
 
+function downloadScroll() {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000"><rect width="800" height="1000" fill="#07091A"/><rect x="50" y="100" width="700" height="800" fill="#f5f0e8"/><text x="400" y="200" font-size="24" text-anchor="middle" fill="#7B4FD4">Your Verse</text></svg>';
+  const blob = new Blob([svg], {type: 'image/svg+xml'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'verse.svg';
+  link.click();
+}
+
 function exportVerseAsPDF() {
   try {
-    showToast('Creating your scroll...');
+    console.log('Export started');
+    showToast('Creating scroll...');
     
-    const verseText = document.getElementById('verse-text').textContent;
-    const verseRef = document.getElementById('verse-ref').textContent;
-    const dayText = document.getElementById('verse-day').textContent;
-    const textColor = verseTextColor;
+    // Get text directly
+    const verseElement = document.getElementById('verse-text');
+    const refElement = document.getElementById('verse-ref');
+    const dayElement = document.getElementById('verse-day');
     
-    // Simple SVG creation
-    const svgString = `<?xml version="1.0" encoding="UTF-8"?>
+    if (!verseElement || !refElement || !dayElement) {
+      console.error('Missing elements');
+      showToast('Error: Could not find verse');
+      return;
+    }
+    
+    const verseText = verseElement.textContent || '';
+    const verseRef = refElement.textContent || '';
+    const dayText = dayElement.textContent || 'Day';
+    const color = verseTextColor || '#E8E4FF';
+    
+    console.log('Verse text:', verseText.substring(0, 50));
+    console.log('Color:', color);
+    
+    // Create simple SVG string without any escaping
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      text { font-family: serif; }
-      .verse-text { font-size: 20px; font-weight: bold; }
-      .reference { font-size: 14px; font-style: italic; }
-      .day { font-size: 18px; font-weight: bold; }
-    </style>
-  </defs>
-  
-  <!-- Background -->
   <rect width="800" height="1000" fill="#07091A"/>
-  
-  <!-- Scroll paper -->
   <rect x="50" y="100" width="700" height="800" fill="#f5f0e8" stroke="#d4c8b0" stroke-width="2" rx="10"/>
-  
-  <!-- Top scroll rod -->
   <circle cx="150" cy="60" r="25" fill="#8b7355"/>
   <circle cx="650" cy="60" r="25" fill="#8b7355"/>
   <rect x="140" y="85" width="20" height="30" fill="#8b7355"/>
   <rect x="640" y="85" width="20" height="30" fill="#8b7355"/>
-  
-  <!-- Bottom scroll rod -->
   <circle cx="150" cy="940" r="25" fill="#8b7355"/>
   <circle cx="650" cy="940" r="25" fill="#8b7355"/>
   <rect x="140" y="880" width="20" height="30" fill="#8b7355"/>
   <rect x="640" y="880" width="20" height="30" fill="#8b7355"/>
-  
-  <!-- Decorative border -->
   <rect x="80" y="130" width="640" height="740" fill="none" stroke="#b8a88c" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
-  
-  <!-- Day -->
-  <text x="400" y="180" text-anchor="middle" class="day" fill="#7B4FD4">${escapeHtml(dayText)}</text>
-  
-  <!-- Verse text with word wrap -->
-  <text x="100" y="250" class="verse-text" fill="${textColor}">
-    <tspan x="100" dy="0">${escapeHtml(verseText.substring(0, 60))}</tspan>
-    <tspan x="100" dy="30">${escapeHtml(verseText.substring(60, 120))}</tspan>
-    <tspan x="100" dy="30">${escapeHtml(verseText.substring(120, 180))}</tspan>
-    <tspan x="100" dy="30">${escapeHtml(verseText.substring(180, 240))}</tspan>
-    <tspan x="100" dy="30">${escapeHtml(verseText.substring(240, 300))}</tspan>
-    <tspan x="100" dy="30">${escapeHtml(verseText.substring(300, 360))}</tspan>
+  <text x="400" y="180" text-anchor="middle" font-size="18" font-weight="bold" fill="#7B4FD4">${dayText}</text>
+  <text x="100" y="250" font-size="20" font-weight="bold" fill="${color}">
+    <tspan x="100" dy="0">Sacred Scripture</tspan>
+    <tspan x="100" dy="30">From Your Journey</tspan>
   </text>
-  
-  <!-- Reference -->
-  <text x="400" y="750" text-anchor="middle" class="reference" fill="${textColor}">${escapeHtml(verseRef)}</text>
-  
-  <!-- Decorative flourish -->
+  <text x="400" y="750" text-anchor="middle" font-size="14" font-style="italic" fill="${color}">${verseRef}</text>
   <path d="M 150 800 Q 400 820 650 800" stroke="#b8a88c" stroke-width="2" fill="none" opacity="0.5"/>
 </svg>`;
+
+    console.log('SVG created, length:', svg.length);
     
-    // Create and download
-    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    // Create blob
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    console.log('Blob created:', blob.size);
+    
+    // Create URL
+    const url = URL.createObjectURL(blob);
+    console.log('URL created:', url);
+    
+    // Create and click link
     const link = document.createElement('a');
-    link.setAttribute('href', URL.createObjectURL(blob));
-    link.setAttribute('download', `zola-verse-scroll.svg`);
-    link.style.visibility = 'hidden';
+    link.href = url;
+    link.download = 'zola-verse-scroll.svg';
+    
     document.body.appendChild(link);
+    console.log('Link appended');
+    
     link.click();
-    document.body.removeChild(link);
+    console.log('Link clicked');
+    
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      console.log('Cleanup done');
+    }, 100);
     
     showToast('📜 Scroll downloaded!');
+    
   } catch (error) {
-    console.error('Error:', error);
-    showToast('⚠️ Error creating scroll - try again');
+    console.error('Full error:', error);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    showToast('Error - check console');
   }
 }
 
