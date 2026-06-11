@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Zola App - 30 Day Scripture Plans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&family=Syne:wght@700;800&family=Cinzel:wght@400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;background:#07091A;font-family:'DM Sans',sans-serif;}
+
+:root{
+  --sp:#7B4FD4;
+  --sp2:#A78BFA;
+  --sp-pale:rgba(123,79,212,0.12);
+  --sp-glow:rgba(123,79,212,0.32);
+  --gold:#FFD700;
+  --t1:#1A1E2E;
+  --t2:#3D4460;
+  --t3:#7A82A8;
+  --t4:#C0C8E8;
+}
+
+body{background:#07091A;}
+
+#app{
+  position:relative;
+  width:100%;
+  max-width:430px;
+  height:100%;
+  margin:0 auto;
+  background:radial-gradient(ellipse at 50% 0%,rgba(100,60,200,0.48) 0%,transparent 58%),radial-gradient(ellipse at 12% 82%,rgba(196,120,32,0.20) 0%,transparent 45%),linear-gradient(165deg,#07091A 0%,#0D1B3E 42%,#13113A 72%,#0A1628 100%);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* STATUS BAR */
+#sbar{
+  flex-shrink:0;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  z-index:10;
+  background:rgba(7,9,26,0.92);
+  backdrop-filter:blur(12px);
+}
+
+.sbar-time{
+  font-family:'DM Mono',monospace;
+  font-size:14px;
+  font-weight:800;
+  color:rgba(255,255,255,0.92);
+}
+
+.sbar-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.sbar-btn{
+  padding:4px 12px;
+  border-radius:100px;
+  border:1px solid rgba(123,79,212,0.30);
+  background:rgba(123,79,212,0.12);
+  font-size:10px;
+  font-weight:800;
+  color:var(--sp2);
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:all 0.2s;
+}
+
+.sbar-btn:active{transform:scale(0.92);}
+
+/* ACTION BAR */
+#action-bar{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  background:rgba(7,9,26,0.88);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(8px);
+}
+
+.ab-lbl{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
+  margin-right:auto;
+  font-weight:800;
+}
+
+.ab-btn{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 11px;
+  border-radius:100px;
+  border:1.5px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.05);
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  font-weight:800;
+  color:rgba(255,255,255,0.65);
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+
+.ab-btn:hover{border-color:var(--sp2);color:var(--sp2);}
+.ab-btn:active{transform:scale(0.90);}
+
+/* MAIN CONTENT */
+#spirit-main{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding-bottom:20px;
+  position:relative;
+  z-index:1;
+}
+
+#spirit-main::-webkit-scrollbar{display:none;}
+
+/* HEADER */
+.sp-hdr{
+  padding:18px 16px 8px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+}
+
+.sp-title{
+  font-family:'Syne',sans-serif;
+  font-size:32px;
+  font-weight:800;
+  color:#E8E4FF;
+  line-height:1.1;
+  letter-spacing:-0.5px;
+}
+
+.sp-sub{
+  font-size:12px;
+  color:rgba(200,190,255,0.60);
+  margin-top:5px;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+/* PLAN SELECTOR */
+.plan-selector{
+  display:flex;
+  gap:8px;
+  margin:12px 14px;
+  padding:8px;
+  background:rgba(123,79,212,0.08);
+  border-radius:14px;
+  border:1px solid rgba(123,79,212,0.20);
+}
+
+.plan-tab{
+  flex:1;
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid transparent;
+  background:transparent;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:800;
+  color:rgba(200,190,255,0.65);
+  cursor:pointer;
+  transition:all 0.3s;
+  text-align:center;
+}
+
+.plan-tab.active{
+  background:linear-gradient(135deg,var(--sp),var(--sp2));
+  color:#fff;
+  border-color:var(--sp2);
+}
+
+/* VERSE CARD */
+.sp-verse-card{
+  margin:4px 14px 10px;
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02));
+  border:1px solid rgba(123,79,212,0.30);
+  padding:18px 16px;
+  position:relative;
+  overflow:hidden;
+}
+
+.sp-verse-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 78% 18%,rgba(123,79,212,0.20),transparent 60%);
+}
+
+.verse-label{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(200,190,255,0.65);
+  margin-bottom:10px;
+  position:relative;
+  z-index:1;
+  font-weight:800;
+}
+
+.verse-day{
+  font-family:'Syne',sans-serif;
+  font-size:24px;
+  font-weight:800;
+  color:var(--sp2);
+  margin-bottom:12px;
+  position:relative;
+  z-index:1;
+  letter-spacing:-0.3px;
+}
+
+.sp-verse-text{
+  font-family:'Syne',sans-serif;
+  font-size:16px;
+  color:rgba(240,236,255,0.95);
+  line-height:2;
+  position:relative;
+  z-index:1;
+  font-style:normal;
+  font-weight:800;
+}
+
+.sp-verse-ref{
+  font-family:'Playfair Display',serif;
+  font-size:12px;
+  color:var(--sp2);
+  margin-top:14px;
+  position:relative;
+  z-index:1;
+  font-weight:500;
+  letter-spacing:0.3px;
+  font-style:italic;
+}
+
+.sp-verse-btns{
+  margin-top:11px;
+  position:relative;
+  z-index:1;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.sp-vbtn{
+  padding:6px 14px;
+  border-radius:100px;
+  border:1px solid rgba(123,79,212,0.30);
+  background:rgba(123,79,212,0.12);
+  font-size:11px;
+  font-weight:800;
+  color:var(--sp2);
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:all 0.2s;
+}
+
+.sp-vbtn:active{transform:scale(0.90);}
+.sp-vbtn-fav.active{background:rgba(232,84,122,0.25);}
+
+/* SECTIONS */
+.sp-sec{
+  margin:0 14px 10px;
+  position:relative;
+  z-index:1;
+}
+
+.sp-sec-lbl{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(200,190,255,0.50);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+  font-weight:800;
+}
+
+.sp-sec-lbl-line{
+  flex:1;
+  height:1px;
+  background:rgba(255,255,255,0.06);
+}
+
+.sp-sec-lbl .sp-chev{
+  font-size:9px;
+  color:rgba(200,190,255,0.38);
+  transition:transform 0.28s cubic-bezier(0.34,1.2,0.64,1);
+  flex-shrink:0;
+}
+
+.sp-sec.collapsed .sp-chev{
+  transform:rotate(-90deg);
+}
+
+.sp-sec-body{
+  overflow:hidden;
+  max-height:1000px;
+  transition:max-height 0.38s cubic-bezier(0.4,0,0.2,1),opacity 0.28s ease;
+  opacity:1;
+}
+
+.sp-sec.collapsed .sp-sec-body{
+  max-height:0!important;
+  opacity:0;
+}
+
+/* PRAYER LIST */
+.sp-prayer-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 13px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(123,79,212,0.16);
+  cursor:pointer;
+  transition:all 0.22s;
+  margin-bottom:6px;
+}
+
+.sp-prayer-item.prayed{
+  background:rgba(123,79,212,0.13);
+  border-color:rgba(123,79,212,0.32);
+}
+
+.sp-p-chk{
+  width:22px;
+  height:22px;
+  border-radius:7px;
+  border:2px solid rgba(123,79,212,0.42);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  flex-shrink:0;
+  transition:all 0.22s;
+  color:#fff;
+}
+
+.sp-prayer-item.prayed .sp-p-chk{
+  background:var(--sp);
+  border-color:var(--sp);
+}
+
+.sp-prayer-item.prayed .sp-p-chk::after{
+  content:'✓';
+}
+
+.sp-p-text{
+  font-size:12.5px;
+  font-weight:700;
+  color:rgba(230,225,255,0.88);
+  flex:1;
+  line-height:1.4;
+}
+
+.sp-prayer-item.prayed .sp-p-text{
+  color:rgba(160,150,200,0.55);
+  text-decoration:line-through;
+}
+
+.sp-add-prayer-btn{
+  width:100%;
+  padding:10px;
+  border:1.5px dashed rgba(123,79,212,0.22);
+  border-radius:14px;
+  background:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  color:rgba(200,190,255,0.48);
+  cursor:pointer;
+  margin-top:5px;
+  transition:all 0.2s;
+  font-weight:700;
+}
+
+.sp-add-prayer-btn:hover{
+  border-color:var(--sp2);
+  color:var(--sp2);
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(10px);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-content{
+  background:linear-gradient(135deg,rgba(26,30,46,0.95),rgba(61,68,96,0.85));
+  border:1px solid rgba(123,79,212,0.30);
+  border-radius:20px;
+  padding:24px;
+  max-width:320px;
+  width:90%;
+  max-height:80vh;
+  overflow-y:auto;
+}
+
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-size:20px;
+  font-weight:800;
+  color:#E8E4FF;
+  margin-bottom:16px;
+  letter-spacing:-0.3px;
+}
+
+.modal-input{
+  width:100%;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(123,79,212,0.30);
+  background:rgba(123,79,212,0.12);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  color:rgba(240,236,255,0.95);
+  margin-bottom:12px;
+  resize:vertical;
+  min-height:60px;
+  font-weight:600;
+}
+
+.modal-btn{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--sp2);
+  background:linear-gradient(135deg,var(--sp),var(--sp2));
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:800;
+  color:#fff;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.modal-btn:active{
+  transform:scale(0.95);
+}
+
+.modal-close{
+  float:right;
+  font-size:20px;
+  cursor:pointer;
+  color:rgba(200,190,255,0.50);
+}
+
+/* DECLARATION ENTRY */
+.sp-declaration-entry{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(123,79,212,0.10),rgba(100,60,200,0.06));
+  border:1px solid rgba(123,79,212,0.22);
+  cursor:pointer;
+  transition:all 0.22s;
+  margin-bottom:8px;
+  position:relative;
+}
+
+.sp-declaration-entry::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 100% 0%,rgba(123,79,212,0.12),transparent 70%);
+}
+
+.sp-decl-avatar{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,220,100,0.30),rgba(123,79,212,0.25));
+  border:1.5px solid rgba(123,79,212,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+  position:relative;
+  z-index:1;
+}
+
+.sp-decl-content{
+  flex:1;
+  position:relative;
+  z-index:1;
+}
+
+.sp-decl-text{
+  font-size:12.5px;
+  color:rgba(230,225,255,0.90);
+  line-height:1.6;
+  font-weight:700;
+}
+
+.sp-decl-date{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  color:rgba(200,190,255,0.50);
+  margin-top:5px;
+  font-weight:700;
+}
+
+/* PLAN GRID */
+.plan-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:0 14px 10px;
+  margin:0;
+}
+
+.plan-day{
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(123,79,212,0.20);
+  background:rgba(123,79,212,0.08);
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+}
+
+.plan-day:hover{
+  border-color:var(--sp2);
+  background:rgba(123,79,212,0.15);
+}
+
+.plan-day.completed{
+  background:rgba(123,79,212,0.25);
+  border-color:var(--sp2);
+}
+
+.plan-day-num{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  color:rgba(200,190,255,0.65);
+  margin-bottom:5px;
+  font-weight:800;
+}
+
+.plan-day-verse{
+  font-family:'Playfair Display',serif;
+  font-size:10px;
+  color:rgba(240,236,255,0.85);
+  line-height:1.4;
+  font-style:italic;
+  font-weight:600;
+}
+
+.plan-day.completed::after{
+  content:'✓';
+  position:absolute;
+  top:4px;
+  right:6px;
+  font-size:12px;
+  color:var(--sp2);
+}
+
+/* VERSE COLOR SWATCHES */
+.verse-color-swatches{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+  position:relative;
+  z-index:1;
+  flex-wrap:wrap;
+}
+
+.color-swatch{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  border:2px solid rgba(255,255,255,0.20);
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+
+.color-swatch:hover{
+  transform:scale(1.1);
+  border-color:rgba(255,255,255,0.60);
+}
+
+.color-swatch.active{
+  border-color:#fff;
+  box-shadow:0 0 12px currentColor;
+}
+
+.pdf-export-btn{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(123,79,212,0.30);
+  background:linear-gradient(135deg,rgba(123,79,212,0.20),rgba(123,79,212,0.10));
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:800;
+  color:var(--sp2);
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:12px;
+}
+
+.pdf-export-btn:hover{
+  background:linear-gradient(135deg,rgba(123,79,212,0.30),rgba(123,79,212,0.20));
+  border-color:var(--sp2);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(123,79,212,0.30);
+  border:1px solid var(--sp2);
+  border-radius:12px;
+  padding:12px 20px;
+  font-size:12px;
+  color:#fff;
+  font-weight:600;
+  z-index:10000;
+  animation:slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp{
+  from{transform:translateX(-50%) translateY(20px);opacity:0;}
+  to{transform:translateX(-50%) translateY(0);opacity:1;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sbar">
+    <div class="sbar-time" id="time-display">12:00</div>
+    <div class="sbar-right">
+      <button class="sbar-btn" onclick="clearAllData()">Reset</button>
+    </div>
+  </div>
+
+  <div id="action-bar">
+  </div>
+
+  <div id="spirit-main">
+    <div class="sp-hdr">
+      <div>
+        <div class="sp-title">Zola App</div>
+        <div class="sp-sub">30-Day Scripture Plans</div>
+      </div>
+    </div>
+
+    <!-- PLAN SELECTOR -->
+    <div class="plan-selector">
+      <button class="plan-tab active" onclick="switchPlan('love')">God's Love</button>
+      <button class="plan-tab" onclick="switchPlan('identity')">Who I Am</button>
+    </div>
+
+    <!-- VERSE OF THE DAY -->
+    <div class="sp-verse-card">
+      <div class="verse-label">Today's Verse</div>
+      <div class="verse-day" id="verse-day">Day 1</div>
+      <div class="sp-verse-text" id="verse-text">Loading...</div>
+      <div class="sp-verse-ref" id="verse-ref"></div>
+      
+      <!-- COLOR SWATCHES -->
+      <div class="verse-color-swatches" id="color-swatches"></div>
+      
+      <!-- PDF EXPORT BUTTON -->
+      <button class="pdf-export-btn" onclick="exportVerseAsPDF()">📜 Share as Scroll</button>
+      
+      <div class="sp-verse-btns">
+        <button class="sp-vbtn" onclick="favoriteVerse()">❤ Mark</button>
+        <button class="sp-vbtn" onclick="shareVerse()">📤 Share</button>
+      </div>
+    </div>
+
+    <!-- 30 DAY PLAN GRID -->
+    <div class="sp-sec">
+      <div class="sp-sec-lbl" onclick="toggleSection(event)">
+        <span>📖 30-Day Plan</span>
+        <div class="sp-sec-lbl-line"></div>
+        <span class="sp-chev">›</span>
+      </div>
+      <div class="sp-sec-body">
+        <div class="plan-grid" id="plan-grid"></div>
+      </div>
+    </div>
+
+    <!-- PRAYERS SECTION -->
+    <div class="sp-sec">
+      <div class="sp-sec-lbl" onclick="toggleSection(event)">
+        <span>🙏 Prayers</span>
+        <div class="sp-sec-lbl-line"></div>
+        <span class="sp-chev">›</span>
+      </div>
+      <div class="sp-sec-body">
+        <div style="margin:12px 2px;position:relative;z-index:1;">
+          <div id="prayer-list"></div>
+          <button class="sp-add-prayer-btn" onclick="openAddPrayerModal()">+ Add Prayer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECLARATIONS SECTION -->
+    <div class="sp-sec">
+      <div class="sp-sec-lbl" onclick="toggleSection(event)">
+        <span>💬 Declarations</span>
+        <div class="sp-sec-lbl-line"></div>
+        <span class="sp-chev">›</span>
+      </div>
+      <div class="sp-sec-body">
+        <div style="margin:12px 2px;position:relative;z-index:1;">
+          <div id="declarations-list"></div>
+          <button class="sp-add-prayer-btn" onclick="openAddDeclarationModal()">+ Add Declaration</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRATITUDE SECTION -->
+    <div class="sp-sec">
+      <div class="sp-sec-lbl" onclick="toggleSection(event)">
+        <span>✨ Gratitude</span>
+        <div class="sp-sec-lbl-line"></div>
+        <span class="sp-chev">›</span>
+      </div>
+      <div class="sp-sec-body">
+        <div style="margin:12px 2px;position:relative;z-index:1;">
+          <div id="gratitude-list"></div>
+          <button class="sp-add-prayer-btn" onclick="openAddGratitudeModal()">+ Add Entry</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRAYER MODAL -->
+<div id="prayer-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closePrayerModal()">&times;</span>
+    <div class="modal-title">Add Prayer</div>
+    <textarea class="modal-input" id="prayer-input" placeholder="Write your prayer..."></textarea>
+    <button class="modal-btn" onclick="savePrayer()">Add Prayer</button>
+  </div>
+</div>
+
+<!-- ADD DECLARATION MODAL -->
+<div id="declaration-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeDeclarationModal()">&times;</span>
+    <div class="modal-title">Add Declaration</div>
+    <textarea class="modal-input" id="declaration-input" placeholder="Write your declaration..."></textarea>
+    <button class="modal-btn" onclick="saveDeclaration()">Add Declaration</button>
+  </div>
+</div>
+
+<!-- ADD GRATITUDE MODAL -->
+<div id="gratitude-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeGratitudeModal()">&times;</span>
+    <div class="modal-title">Add Gratitude</div>
+    <textarea class="modal-input" id="gratitude-input" placeholder="What are you grateful for?"></textarea>
+    <button class="modal-btn" onclick="saveGratitude()">Add Entry</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// 30-DAY SCRIPTURE PLANS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const SCRIPTURE_PLANS = {
+  love: {
+    title: "God's Love for Me",
+    description: "A 30-day journey exploring the depth and breadth of God's love",
+    verses: [
+      { day: 1, text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", ref: "John 3:16" },
+      { day: 2, text: "Herein is love, not that we loved God, but that he loved us, and sent his Son to be the propitiation for our sins.", ref: "1 John 4:10" },
+      { day: 3, text: "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.", ref: "Romans 5:8" },
+      { day: 4, text: "The Lord is merciful and gracious, slow to anger, and plenteous in mercy. As far as the east is from the west, so far hath he removed our transgressions from us.", ref: "Psalm 103:8, 12" },
+      { day: 5, text: "I have loved thee with an everlasting love: therefore with lovingkindness have I drawn thee.", ref: "Jeremiah 31:3" },
+      { day: 6, text: "Behold, what manner of love the Father hath bestowed upon us, that we should be called the sons of God.", ref: "1 John 3:1" },
+      { day: 7, text: "And we have known and believed the love that God hath to us. God is love; and he that dwelleth in love dwelleth in God, and God in him.", ref: "1 John 4:16" },
+      { day: 8, text: "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.", ref: "Romans 8:38-39" },
+      { day: 9, text: "Draw nigh to God, and he will draw nigh to you. Cleanse your hands, ye sinners; and purify your hearts, ye double minded.", ref: "James 4:8" },
+      { day: 10, text: "Beloved, if God so loved us, we ought also to love one another.", ref: "1 John 4:11" },
+      { day: 11, text: "Greater love hath no man than this, that a man lay down his life for his friends.", ref: "John 15:13" },
+      { day: 12, text: "O give thanks unto the Lord; for he is good: for his mercy endureth for ever.", ref: "Psalm 107:1" },
+      { day: 13, text: "I am the good shepherd: the good shepherd giveth his life for the sheep.", ref: "John 10:11" },
+      { day: 14, text: "Like as a father pitieth his children, so the Lord pitieth them that fear him.", ref: "Psalm 103:13" },
+      { day: 15, text: "For the mountains shall depart, and the hills be removed; but my kindness shall not depart from thee, neither shall the covenant of my peace be removed, saith the Lord that hath mercy on thee.", ref: "Isaiah 54:10" },
+      { day: 16, text: "He that hath my commandments, and keepeth them, he it is that loveth me: and he that loveth me shall be loved of my Father, and I will love him, and will manifest myself to him.", ref: "John 14:21" },
+      { day: 17, text: "Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us, unto him be glory in the church by Christ Jesus throughout all ages, world without end.", ref: "Ephesians 3:20-21" },
+      { day: 18, text: "In this was manifested the love of God toward us, because that God sent his only begotten Son into the world, that we might live through him.", ref: "1 John 4:9" },
+      { day: 19, text: "Who shall separate us from the love of Christ? shall tribulation, or distress, or persecution, or famine, or nakedness, or peril, or sword?", ref: "Romans 8:35" },
+      { day: 20, text: "Thou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.", ref: "Psalm 23:5" },
+      { day: 21, text: "The Lord is nigh unto all them that call upon him, to all that call upon him in truth. He will fulfil the desire of them that fear him.", ref: "Psalm 145:18-19" },
+      { day: 22, text: "For as the heaven is high above the earth, so great is his mercy toward them that fear him.", ref: "Psalm 103:11" },
+      { day: 23, text: "Rejoice in the Lord alway: and again I say, Rejoice. Let your moderation be known unto all men. The Lord is at hand.", ref: "Philippians 4:4-5" },
+      { day: 24, text: "And the peace of God, which passeth all understanding, shall keep your hearts and your minds in Christ Jesus.", ref: "Philippians 4:7" },
+      { day: 25, text: "I will not leave you comfortless: I will come to you. Yet a little while, and the world seeth me no more; but ye see me: because I live, ye shall live also.", ref: "John 14:18, 19" },
+      { day: 26, text: "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.", ref: "John 16:33" },
+      { day: 27, text: "Now therefore, fear the Lord, and serve him in sincerity and in truth: and put away the gods which your fathers served on the other side of the flood.", ref: "Joshua 24:14" },
+      { day: 28, text: "Cast thy burden upon the Lord, and he shall sustain thee: he shall never suffer the righteous to be moved.", ref: "Psalm 55:22" },
+      { day: 29, text: "My grace is sufficient for thee: for my strength is made perfect in weakness.", ref: "2 Corinthians 12:9" },
+      { day: 30, text: "Being confident of this very thing, that he which hath begun a good work in you will perform it until the day of Jesus Christ.", ref: "Philippians 1:6" }
+    ]
+  },
+  identity: {
+    title: "Who I Am in Christ",
+    description: "A 30-day journey discovering your true identity and worth in Christ",
+    verses: [
+      { day: 1, text: "Now are we the sons of God, and it doth not yet appear what we shall be: but we know that, when he shall appear, we shall be like him; for we shall see him as he is.", ref: "1 John 3:2" },
+      { day: 2, text: "I can do all things through Christ which strengtheneth me.", ref: "Philippians 4:13" },
+      { day: 3, text: "Ye are the light of the world. A city that is set on an hill cannot be hid.", ref: "Matthew 5:14" },
+      { day: 4, text: "For as a man thinketh in his heart, so is he: Eat and drink, saith he to thee; but his heart is not with thee.", ref: "Proverbs 23:7" },
+      { day: 5, text: "But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people; that ye should shew forth the praises of him who hath called you out of darkness into his marvellous light.", ref: "1 Peter 2:9" },
+      { day: 6, text: "Know ye not that ye are the temple of God, and that the Spirit of God dwelleth in you?", ref: "1 Corinthians 3:16" },
+      { day: 7, text: "For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.", ref: "Ephesians 2:10" },
+      { day: 8, text: "As a man thinketh in his heart, so is he. I am more than a conqueror through him that loved me.", ref: "Proverbs 23:7, Romans 8:37" },
+      { day: 9, text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", ref: "2 Timothy 1:7" },
+      { day: 10, text: "Nay, in all these things we are more than conquerors through him that loved us.", ref: "Romans 8:37" },
+      { day: 11, text: "Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.", ref: "2 Corinthians 5:17" },
+      { day: 12, text: "I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.", ref: "Galatians 2:20" },
+      { day: 13, text: "For by one Spirit are we all baptized into one body, whether we be Jews or Gentiles, whether we be bond or free.", ref: "1 Corinthians 12:13" },
+      { day: 14, text: "Now therefore ye are no more strangers and foreigners, but fellowcitizens with the saints, and of the household of God.", ref: "Ephesians 2:19" },
+      { day: 15, text: "I have been crucified with Christ and I no longer live, but Christ lives in me. The life I live in the body, I live by faith in the Son of God, who loved me and gave himself for me.", ref: "Galatians 2:20" },
+      { day: 16, text: "Forasmuch then as Christ hath suffered for us in the flesh, arm yourselves likewise with the same mind: for he that hath suffered in the flesh hath ceased from sin.", ref: "1 Peter 4:1" },
+      { day: 17, text: "Reckon ye also yourselves to be dead indeed unto sin, but alive unto God through Jesus Christ our Lord.", ref: "Romans 6:11" },
+      { day: 18, text: "For in him dwelleth all the fulness of the Godhead bodily. And ye are complete in him, which is the head of all principality and power.", ref: "Colossians 2:9-10" },
+      { day: 19, text: "But the Lord is faithful, who shall stablish you, and keep you from evil.", ref: "2 Thessalonians 3:3" },
+      { day: 20, text: "For I know whom I have believed, and am persuaded that he is able to keep that which I have committed unto him against that day.", ref: "2 Timothy 1:12" },
+      { day: 21, text: "Wherefore gird up the loins of your mind, be sober, and hope to the end for the grace that is to be brought unto you at the revelation of Jesus Christ.", ref: "1 Peter 1:13" },
+      { day: 22, text: "For as he thinketh in his heart, so is he: Eat and drink, saith he to thee; but his heart is not with thee.", ref: "Proverbs 23:7" },
+      { day: 23, text: "Beloved, now are we the sons of God, and it doth not yet appear what we shall be: but we know that, when he shall appear, we shall be like him; for we shall see him as he is.", ref: "1 John 3:2" },
+      { day: 24, text: "And have put on the new man, which is renewed in knowledge after the image of him that created him.", ref: "Colossians 3:10" },
+      { day: 25, text: "Therefore being justified by faith, we have peace with God through our Lord Jesus Christ.", ref: "Romans 5:1" },
+      { day: 26, text: "For ye have not received the spirit of bondage again to fear; but ye have received the Spirit of adoption, whereby we cry, Abba, Father.", ref: "Romans 8:15" },
+      { day: 27, text: "I am the way, the truth, and the life: no man cometh unto the Father, but by me. And whatsoever ye shall ask in my name, that will I do.", ref: "John 14:6, 13" },
+      { day: 28, text: "For we walk by faith, not by sight.", ref: "2 Corinthians 5:7" },
+      { day: 29, text: "Commit thy way unto the Lord; trust also in him; and he shall bring it to pass. And he shall bring forth thy righteousness as the light, and thy judgment as the noonday.", ref: "Psalm 37:5-6" },
+      { day: 30, text: "I press toward the mark for the prize of the high calling of God in Christ Jesus.", ref: "Philippians 3:14" }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE & DATA
+// ═══════════════════════════════════════════════════════════════════════════
+
+let currentPlan = 'love';
+let prayers = [];
+let declarations = [];
+let gratitude = [];
+let favoriteVerses = [];
+let completedDays = {};
+let verseTextColor = '#E8E4FF';
+
+// Color palette for verses
+const VERSE_COLORS = [
+  { name: 'White', hex: '#E8E4FF' },
+  { name: 'Gold', hex: '#FFD700' },
+  { name: 'Rose', hex: '#FF7A9A' },
+  { name: 'Lavender', hex: '#A78BFA' },
+  { name: 'Mint', hex: '#14C4AF' },
+  { name: 'Peach', hex: '#FF8C7B' },
+  { name: 'Sky', hex: '#7AC5FF' },
+  { name: 'Sage', hex: '#9DB89D' }
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+function init() {
+  loadData();
+  updateTime();
+  setInterval(updateTime, 1000);
+  renderVerseOfDay();
+  renderPlanGrid();
+  renderPrayers();
+  renderDeclarations();
+  renderGratitude();
+}
+
+function loadData() {
+  const saved = localStorage.getItem('spiritAppData');
+  if (saved) {
+    const data = JSON.parse(saved);
+    prayers = data.prayers || [];
+    declarations = data.declarations || [];
+    gratitude = data.gratitude || [];
+    favoriteVerses = data.favoriteVerses || [];
+    completedDays = data.completedDays || {};
+    currentPlan = data.currentPlan || 'love';
+    verseTextColor = data.verseTextColor || '#E8E4FF';
+  }
+}
+
+function saveData() {
+  const data = {
+    prayers,
+    declarations,
+    gratitude,
+    favoriteVerses,
+    completedDays,
+    currentPlan,
+    verseTextColor
+  };
+  localStorage.setItem('spiritAppData', JSON.stringify(data));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PLAN & VERSE LOGIC
+// ═══════════════════════════════════════════════════════════════════════════
+
+function switchPlan(plan) {
+  currentPlan = plan;
+  saveData();
+  document.querySelectorAll('.plan-tab').forEach(tab => tab.classList.remove('active'));
+  event.target.classList.add('active');
+  renderVerseOfDay();
+  renderPlanGrid();
+}
+
+function getCurrentDay() {
+  // Get day of year to align with 30-day cycles
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  return ((dayOfYear % 30) || 30); // 1-30 cycling
+}
+
+function renderVerseOfDay() {
+  const day = getCurrentDay();
+  const plan = SCRIPTURE_PLANS[currentPlan];
+  const verse = plan.verses[day - 1];
+  
+  document.getElementById('verse-day').textContent = `Day ${day} of 30`;
+  document.getElementById('verse-text').textContent = verse.text;
+  document.getElementById('verse-text').style.color = verseTextColor;
+  document.getElementById('verse-ref').textContent = verse.ref;
+  
+  renderColorSwatches();
+}
+
+function renderColorSwatches() {
+  const container = document.getElementById('color-swatches');
+  container.innerHTML = '';
+  
+  VERSE_COLORS.forEach((color) => {
+    const swatch = document.createElement('div');
+    swatch.className = 'color-swatch';
+    swatch.style.backgroundColor = color.hex;
+    
+    if (color.hex === verseTextColor) {
+      swatch.classList.add('active');
+    }
+    
+    swatch.onclick = () => changeVerseColor(color.hex);
+    swatch.title = color.name;
+    container.appendChild(swatch);
+  });
+}
+
+function changeVerseColor(color) {
+  verseTextColor = color;
+  const verseText = document.getElementById('verse-text');
+  verseText.style.color = color;
+  renderColorSwatches();
+}
+
+function renderPlanGrid() {
+  const plan = SCRIPTURE_PLANS[currentPlan];
+  const grid = document.getElementById('plan-grid');
+  const currentDay = getCurrentDay();
+  
+  grid.innerHTML = '';
+  
+  plan.verses.forEach((verse) => {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'plan-day';
+    
+    if (completedDays[`${currentPlan}-${verse.day}`]) {
+      dayEl.classList.add('completed');
+    }
+    
+    dayEl.innerHTML = `
+      <div class="plan-day-num">Day ${verse.day}</div>
+      <div class="plan-day-verse">${verse.ref}</div>
+    `;
+    
+    dayEl.onclick = () => toggleDayComplete(verse.day);
+    grid.appendChild(dayEl);
+  });
+}
+
+function toggleDayComplete(day) {
+  const key = `${currentPlan}-${day}`;
+  completedDays[key] = !completedDays[key];
+  saveData();
+  renderPlanGrid();
+  showToast(completedDays[key] ? '✓ Day marked complete!' : 'Day unmarked');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRAYER MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+function openAddPrayerModal() {
+  document.getElementById('prayer-modal').classList.add('open');
+}
+
+function closePrayerModal() {
+  document.getElementById('prayer-modal').classList.remove('open');
+  document.getElementById('prayer-input').value = '';
+}
+
+function savePrayer() {
+  const text = document.getElementById('prayer-input').value.trim();
+  if (!text) {
+    showToast('Please enter a prayer');
+    return;
+  }
+  
+  prayers.push({
+    id: Date.now(),
+    text,
+    date: new Date().toLocaleDateString(),
+    prayed: false
+  });
+  
+  saveData();
+  renderPrayers();
+  closePrayerModal();
+  showToast('Prayer added 🙏');
+}
+
+function togglePrayer(id) {
+  const prayer = prayers.find(p => p.id === id);
+  if (prayer) {
+    prayer.prayed = !prayer.prayed;
+    saveData();
+    renderPrayers();
+  }
+}
+
+function renderPrayers() {
+  const list = document.getElementById('prayer-list');
+  list.innerHTML = '';
+  
+  prayers.slice().reverse().forEach((prayer) => {
+    const item = document.createElement('div');
+    item.className = `sp-prayer-item ${prayer.prayed ? 'prayed' : ''}`;
+    item.innerHTML = `
+      <div class="sp-p-chk" onclick="togglePrayer(${prayer.id})"></div>
+      <div class="sp-p-text">${escapeHtml(prayer.text)}</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DECLARATION MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+function openAddDeclarationModal() {
+  document.getElementById('declaration-modal').classList.add('open');
+}
+
+function closeDeclarationModal() {
+  document.getElementById('declaration-modal').classList.remove('open');
+  document.getElementById('declaration-input').value = '';
+}
+
+function saveDeclaration() {
+  const text = document.getElementById('declaration-input').value.trim();
+  if (!text) {
+    showToast('Please enter a declaration');
+    return;
+  }
+  
+  declarations.push({
+    id: Date.now(),
+    text,
+    date: new Date().toLocaleDateString()
+  });
+  
+  saveData();
+  renderDeclarations();
+  closeDeclarationModal();
+  showToast('Declaration added 💬');
+}
+
+function renderDeclarations() {
+  const list = document.getElementById('declarations-list');
+  list.innerHTML = '';
+  
+  declarations.slice().reverse().forEach((decl) => {
+    const item = document.createElement('div');
+    item.className = 'sp-declaration-entry';
+    item.innerHTML = `
+      <div class="sp-decl-avatar">💬</div>
+      <div class="sp-decl-content">
+        <div class="sp-decl-text">${escapeHtml(decl.text)}</div>
+        <div class="sp-decl-date">${decl.date}</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GRATITUDE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+function openAddGratitudeModal() {
+  document.getElementById('gratitude-modal').classList.add('open');
+}
+
+function closeGratitudeModal() {
+  document.getElementById('gratitude-modal').classList.remove('open');
+  document.getElementById('gratitude-input').value = '';
+}
+
+function saveGratitude() {
+  const text = document.getElementById('gratitude-input').value.trim();
+  if (!text) {
+    showToast('Please enter something');
+    return;
+  }
+  
+  gratitude.push({
+    id: Date.now(),
+    text,
+    date: new Date().toLocaleDateString()
+  });
+  
+  saveData();
+  renderGratitude();
+  closeGratitudeModal();
+  showToast('Gratitude added ✨');
+}
+
+function renderGratitude() {
+  const list = document.getElementById('gratitude-list');
+  list.innerHTML = '';
+  
+  gratitude.slice().reverse().forEach((entry) => {
+    const item = document.createElement('div');
+    item.className = 'sp-declaration-entry';
+    item.innerHTML = `
+      <div class="sp-decl-avatar">✨</div>
+      <div class="sp-decl-content">
+        <div class="sp-decl-text">${escapeHtml(entry.text)}</div>
+        <div class="sp-decl-date">${entry.date}</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function updateTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('time-display').textContent = `${hours}:${minutes}`;
+}
+
+function toggleSection(event) {
+  const section = event.target.closest('.sp-sec');
+  section.classList.toggle('collapsed');
+}
+
+function favoriteVerse() {
+  const ref = document.getElementById('verse-ref').textContent;
+  if (!favoriteVerses.includes(ref)) {
+    favoriteVerses.push(ref);
+    saveData();
+    showToast('❤ Verse favorited!');
+    event.target.classList.add('active');
+  }
+}
+
+function shareVerse() {
+  const text = document.getElementById('verse-text').textContent;
+  const ref = document.getElementById('verse-ref').textContent;
+  const message = `"${text}" - ${ref}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'Scripture Verse',
+      text: message
+    });
+  } else {
+    navigator.clipboard.writeText(message);
+    showToast('Verse copied to clipboard!');
+  }
+}
+
+function exportVerseAsPDF() {
+  const text = document.getElementById('verse-text').textContent;
+  const ref = document.getElementById('verse-ref').textContent;
+  const day = document.getElementById('verse-day').textContent;
+  
+  // Create SVG with scroll design
+  const svgContent = createScrollSVG(text, ref, day);
+  
+  // Convert SVG to canvas to image
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+  
+  // Create image from SVG
+  const img = new Image();
+  img.onload = () => {
+    ctx.fillStyle = '#07091A';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    
+    // Download as image or PDF
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `verse-${day.replace(/\s/g, '-')}.png`;
+    link.click();
+    
+    showToast('📜 Verse scroll downloaded!');
+  };
+  
+  img.src = 'data:image/svg+xml;base64,' + btoa(svgContent);
+}
+
+function createScrollSVG(verseText, reference, day) {
+  const scrollColor = '#1a1a2e';
+  const paperColor = '#f5f0e8';
+  const textColor = verseTextColor;
+  
+  // Break text into lines for better formatting
+  const maxCharsPerLine = 50;
+  const words = verseText.split(' ');
+  const lines = [];
+  let currentLine = '';
+  
+  words.forEach(word => {
+    if ((currentLine + ' ' + word).length > maxCharsPerLine && currentLine) {
+      lines.push(currentLine.trim());
+      currentLine = word;
+    } else {
+      currentLine += (currentLine ? ' ' : '') + word;
+    }
+  });
+  if (currentLine) lines.push(currentLine.trim());
+  
+  const lineHeight = 32;
+  const textStartY = 250;
+  const textStartX = 80;
+  const paperWidth = 640;
+  
+  let svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg">
+  <!-- Decorative scroll ends -->
+  <ellipse cx="400" cy="80" rx="120" ry="60" fill="${paperColor}" stroke="#d4c8b0" stroke-width="2"/>
+  <ellipse cx="400" cy="920" rx="120" ry="60" fill="${paperColor}" stroke="#d4c8b0" stroke-width="2"/>
+  
+  <!-- Scroll rods -->
+  <rect x="350" y="40" width="20" height="60" rx="10" fill="#8b7355"/>
+  <rect x="430" y="40" width="20" height="60" rx="10" fill="#8b7355"/>
+  <rect x="350" y="900" width="20" height="60" rx="10" fill="#8b7355"/>
+  <rect x="430" y="900" width="20" height="60" rx="10" fill="#8b7355"/>
+  
+  <!-- Paper area -->
+  <rect x="60" y="120" width="680" height="760" rx="8" fill="${paperColor}" stroke="#d4c8b0" stroke-width="2" opacity="0.95"/>
+  
+  <!-- Decorative border -->
+  <rect x="80" y="140" width="640" height="720" fill="none" stroke="#b8a88c" stroke-width="2" stroke-dasharray="5,3" opacity="0.4"/>
+  
+  <!-- Top decoration -->
+  <path d="M 100 160 Q 200 145 400 150 Q 600 145 700 160" stroke="#b8a88c" stroke-width="1.5" fill="none" opacity="0.5"/>
+  
+  <!-- Day indicator -->
+  <text x="400" y="195" font-family="serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#7B4FD4" opacity="0.8">${day}</text>
+  
+  <!-- Verse text -->`;
+  
+  lines.forEach((line, index) => {
+    const yPos = textStartY + (index * lineHeight);
+    svg += `<text x="${textStartX}" y="${yPos}" font-family="'Syne', sans-serif" font-size="24" font-weight="800" fill="${textColor}" opacity="0.95">`;
+    svg += escapeXmlSpecialChars(line);
+    svg += `</text>\n`;
+  });
+  
+  // Reference text
+  const refYPos = textStartY + (lines.length * lineHeight) + 40;
+  svg += `<text x="400" y="${refYPos}" font-family="serif" font-size="16" font-style="italic" text-anchor="middle" fill="${textColor}" opacity="0.8">`;
+  svg += escapeXmlSpecialChars(reference);
+  svg += `</text>\n`;
+  
+  // Bottom decoration
+  svg += `<path d="M 100 840 Q 200 855 400 850 Q 600 855 700 840" stroke="#b8a88c" stroke-width="1.5" fill="none" opacity="0.5"/>`;
+  
+  // Decorative corners
+  svg += `<circle cx="90" cy="150" r="6" fill="#b8a88c" opacity="0.5"/>`;
+  svg += `<circle cx="710" cy="150" r="6" fill="#b8a88c" opacity="0.5"/>`;
+  svg += `<circle cx="90" cy="830" r="6" fill="#b8a88c" opacity="0.5"/>`;
+  svg += `<circle cx="710" cy="830" r="6" fill="#b8a88c" opacity="0.5"/>`;
+  
+  svg += `</svg>`;
+  
+  return svg;
+}
+
+function escapeXmlSpecialChars(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function clearAllData() {
+  if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+    localStorage.removeItem('spiritAppData');
+    prayers = [];
+    declarations = [];
+    gratitude = [];
+    favoriteVerses = [];
+    completedDays = {};
+    init();
+    showToast('Data reset ↻');
+  }
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
